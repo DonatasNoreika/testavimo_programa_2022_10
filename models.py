@@ -16,6 +16,9 @@ class Vartotojas(Base):
     vardas = Column("Vardas", String)
     pavarde = Column("Pavarde", String)
 
+    def __str__(self):
+        return f"{self.id} - {self.vardas} {self.pavarde}"
+
 class Testas(Base):
     __tablename__ = "testas"
     id = Column(Integer, primary_key=True)

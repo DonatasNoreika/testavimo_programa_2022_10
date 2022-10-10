@@ -1,4 +1,4 @@
-from models import engine, Testas, VartotojoAtsakymas, Sprendimas, Atsakymas
+from models import engine, Testas, VartotojoAtsakymas, Sprendimas, Atsakymas, Vartotojas
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 from random import shuffle
@@ -6,13 +6,28 @@ from random import shuffle
 Session = sessionmaker(bind=engine)
 session = Session()
 
+vardas = input("Įveskite vardą")
+pavarde = input("Įveskite pavardę")
+vartotojai = session.query(Vartotojas).all()
+aktyvus_vartotojas = False
+for vartotojas in vartotojai:
+    if vartotojas.vardas == vardas and vartotojas.pavarde == pavarde:
+        print(f"{vardas} {pavarde}, sveikiname prisijungus!")
+        aktyvus_vartotojas = vartotojas
+        break
+else:
+    naujas_vartotojas = Vartotojas(vardas=vardas, pavarde=pavarde)
+    aktyvus_vartotojas = naujas_vartotojas
+    session.add(naujas_vartotojas)
+    session.commit()
+    print(f"Naujas vartotojas {naujas_vartotojas} sukurtas")
 
 while True:
     testai = session.query(Testas).all()
     for testas in testai:
         print(testas)
     pasirinkto_id = int(input("Įveskite testo ID: "))
-    sprendimas = Sprendimas(data=datetime.today(), vartotojas_id=1, testas_id=pasirinkto_id)
+    sprendimas = Sprendimas(data=datetime.today(), vartotojas_id=aktyvus_vartotojas.id, testas_id=pasirinkto_id)
     taskai = 0
     session.add(sprendimas)
     session.commit()
