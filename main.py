@@ -45,16 +45,19 @@ while True:
         vartotojo_pasirinkimai = input("Pasirinkite atsakymą (-us) be tarpų")
         ar_atsakymas_teisingas = True
         for indeksas, atsakymo_id in teisingi_atsakymai.items():
+            aktyvus_atsakymas = session.query(Atsakymas).get(atsakymo_id)
             if str(indeksas) in vartotojo_pasirinkimai:
                 vartotojo_atsakymas = VartotojoAtsakymas(sprendimas_id=sprendimas.id, klausimas_id=klausimas.id, atsakymas_id=atsakymo_id)
                 session.add(vartotojo_atsakymas)
                 session.commit()
-                aktyvus_atsakymas = session.query(Atsakymas).get(atsakymo_id)
                 if aktyvus_atsakymas.ar_teisingas != 1:
+                    ar_atsakymas_teisingas = False
+            else:
+                if aktyvus_atsakymas.ar_teisingas == 1:
                     ar_atsakymas_teisingas = False
         if ar_atsakymas_teisingas:
             taskai += 1
-            print("Taškai: ", taskai)
+        print("Taškai: ", taskai)
     sprendimas.rezultatas = f"{taskai} / {len(testas.klausimai)}"
     session.commit()
     break
