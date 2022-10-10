@@ -1,6 +1,7 @@
 from models import engine, Testas, VartotojoAtsakymas, Sprendimas, Atsakymas
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
+from random import shuffle
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -20,7 +21,9 @@ while True:
         print(klausimas)
         teisingi_atsakymai = {}
         counter = 0
-        for atsakymas in klausimas.atsakymai:
+        klausimo_atsakymai = klausimas.atsakymai
+        shuffle(klausimo_atsakymai)
+        for atsakymas in klausimo_atsakymai:
             counter += 1
             print(f"\t {counter} - {atsakymas.tekstas}")
             teisingi_atsakymai[counter] = atsakymas.id
