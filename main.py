@@ -37,5 +37,6 @@ while True:
         if ar_atsakymas_teisingas:
             taskai += 1
             print("Taškai: ", taskai)
-
+    sprendimas.rezultatas = f"{taskai} / {len(testas.klausimai)}"
+    session.commit()
     break
