@@ -57,7 +57,13 @@ class Sprendimas(Base):
     data = Column("Data", String)
     testas_id = Column(Integer, ForeignKey('testas.id'))
     vartotojas_id = Column(Integer, ForeignKey('vartotojas.id'))
-    rezultatas = Column("Rezultatas", String)
+    rezultatas = Column("Rezultatas", Integer, nullable=True)
+    testas = relationship("Testas")
+    vartotojas = relationship("Vartotojas")
+
+
+    def __str__(self):
+        return f"{self.id} - {self.vartotojas_id}, {self.rezultatas}"
 
 class VartotojoAtsakymas(Base):
     __tablename__ = "vartotojo_atsakymas"

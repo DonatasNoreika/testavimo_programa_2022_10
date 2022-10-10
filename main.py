@@ -6,6 +6,8 @@ from random import shuffle
 Session = sessionmaker(bind=engine)
 session = Session()
 
+taskai = 0
+
 def prideti_testa():
     naujo_testo_pavadinimas = input("Įveskite naujo testo pavadinimą: ")
     naujas_testas = Testas(pavadinimas=naujo_testo_pavadinimas)
@@ -26,6 +28,12 @@ def prideti_testa():
             naujas_atsakymas = Atsakymas(klausimas=naujas_klausimas, tekstas=naujo_atsakymo_tekstas, ar_teisingas=ar_jis_teisingas)
             session.add(naujas_atsakymas)
             session.commit()
+
+sprendimai = session.query(Sprendimas).all()
+sprendimai_mazejantys = sorted(sprendimai, key=lambda sprendimas: (int(sprendimas.rezultatas) / int(len(sprendimas.testas.klausimai)) * 100), reverse=True)[:10]
+for sprendimas in sprendimai_mazejantys:
+    print(sprendimas.vartotojas, "Procentai:",  (int(sprendimas.rezultatas) / int(len(sprendimas.testas.klausimai)) * 100))
+
 
 vardas = input("Įveskite vardą")
 pavarde = input("Įveskite pavardę")
@@ -83,6 +91,6 @@ else:
             if ar_atsakymas_teisingas:
                 taskai += 1
             print("Taškai: ", taskai)
-        sprendimas.rezultatas = f"{taskai} / {len(testas.klausimai)}"
+        sprendimas.rezultatas = taskai
         session.commit()
         break
